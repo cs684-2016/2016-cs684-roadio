@@ -1,5 +1,13 @@
 package com.example.eskay.roadio_iitb;
 
+/* 
+ * Author List: Mustafa Lokhandwala, Shalaka Kulkarni, Umang Chhaparia
+ * Filename: MapsActivity.java
+ * Functions: onCreate(Bundle), onMapReady(GoogleMap), setMarkerColor(Marker, float), statusCheck(), buildAlertMessageNoGps(), readFile() 
+ * Global Variables: mMap, location[], score[], numberOfLocations.
+ */
+
+
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -26,10 +34,18 @@ import java.util.*;
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    LatLng location[] = {new LatLng(19.132918, 72.917845), new LatLng(19.132898,72.91785), new LatLng(19.132837,72.917861), new LatLng(19.132766,72.917877), new LatLng(19.13271,72.917883), new LatLng(19.13267,72.917893), new LatLng(19.132634,72.917899), new LatLng(19.132569,72.917963), new LatLng(19.132447,72.917931), new LatLng(19.132406,72.917936)};
-    float score[] = {3, 5, 4, 6, 7, 5, 7, 8, 6, 9};
-    int numberOfLocations = 10;
+    LatLng location[];
+    float score[];
+    int numberOfLocations;
 
+    /*
+     * Function name: onCreate(Bundle savedInstanceState)
+     * Input: savedInstanceState -> last saved bundle
+     * Output: None
+     * Logic: Initialises activity
+     * Example call: Called by default when the activity is launched.
+     */
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +57,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapFragment.getMapAsync(this);
     }
 
+    /*
+     * Function name: onMapReady(GoogleMap googleMap)
+     * Input: googleMap -> Google map instance
+     * Output: None
+     * Logic: Enables location access with user permission; calls function to fetch location and score; adds markers to map.
+     * Example call: Called by default when the map has been loaded.
+     */
+    
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -51,11 +75,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         catch (SecurityException se) {
             Log.d("onMapReady", "SecurityException");
         }
-        /*LatLng loc1 = new LatLng(19.0760, 72.8777);
-        mMap.addMarker(new MarkerOptions().position(loc1).title("Mumbai").snippet("Road quality score: 10.0"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(loc1));*/
-
-        //readFile(); //location and score arrays populated with file contents
+        
+        readFile(); //location and score arrays populated with file contents
 
         for(int i=0;i<numberOfLocations;i++)
         {
@@ -66,6 +87,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+     /*
+     * Function name: setMarkerColor(Marker marker, float num)
+     * Input: marker -> Google map marker instance; num -> score associated with that marker
+     * Output: None
+     * Logic: Sets marker colour based on the value of num.
+     * Example call: Called by default when the map has been loaded.
+     */
+    
     void setMarkerColor(Marker marker, float num)
     {
         int n = (int)num;
@@ -103,6 +132,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+     /*
+     * Function name: statusCheck()
+     * Input: none
+     * Output: none
+     * Logic: Checks if location has been enabled, if not, enables with user permission.
+     * Example call: statusCheck();
+     */
+    
     public void statusCheck() {
         final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
@@ -112,6 +149,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+     /*
+     * Function name: buildAlertMessageNoGps()
+     * Input: none
+     * Output: none
+     * Logic: Creates user alert to launch location activity
+     * Example call: buildAlertMessageNoGps();
+     */
+    
     private void buildAlertMessageNoGps() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
@@ -129,14 +174,22 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         final AlertDialog alert = builder.create();
         alert.show();
     }
+    
+     /*
+     * Function name: readFile()
+     * Input: none
+     * Output: none
+     * Logic: Reads locations and road quality scores from a file myFile.txt received from the post-processing pipeline.
+     * Example call: readFile();
+     */
 
     void readFile()
     {
-        /*File filePath = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "Embedded");
+        File filePath = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS));
         filePath.mkdirs();
-        File file = new File(filePath, "myFile.txt");*/
+        File file = new File(filePath, "myFile.txt");
 
-        File file = new File("file:///sdcard/Download/myFile.txt");
+        //File file = new File("file:///sdcard/Download/myFile.txt");
 
         try
         {
@@ -180,7 +233,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     /**
      * TO DO
-     * Read file of lat/lon/score <---------- FileNotFoundException
+     * [done] Read file of lat/lon/score
      * [done] Create array/list of locations and scores
      * [done] Create corresponding array of markers with scores
      * [done] Set colour of marker based on score
